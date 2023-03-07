@@ -6,7 +6,7 @@ import { lowerFirstLetter } from "./util";
 export function writeMapper(
   writer: CodeBlockWriter,
 	options: Options,
-  { parameterName, propertyName, dtoName, isSimpleType, isEnum, isInterface, isType, isArray }: WriteMapperOptions
+  { parameterName, propertyName, dtoName, isOptional, isSimpleType, isEnum, isInterface, isType, isArray }: WriteMapperOptions
 ) {
   const mapperWriter = buildMapperWriter(writer);
 
@@ -22,14 +22,14 @@ export function writeMapper(
     if (isBasedType.includes(lowerFirstLetter(interfaceName))) {
       mapperWriter.writeSimpleType(propertyName, parameterName);
     } else {
-      mapperWriter.writeObject(propertyName, mappingMethodName, parameterName);
+      mapperWriter.writeObject(propertyName, mappingMethodName, parameterName, isOptional);
     }
     return true;
   } else if (isArray) {
     const interfaceName = dtoName.replace("[]", "");
     const mappingMethodName = `${lowerFirstLetter(interfaceName)}To${options.target.name}`;
 
-    mapperWriter.writeArray(propertyName, mappingMethodName, parameterName);
+    mapperWriter.writeArray(propertyName, mappingMethodName, parameterName, isOptional);
     return true;
   } else if (isEnum) {
     const enumName = dtoName;
@@ -41,7 +41,7 @@ export function writeMapper(
     const typeName = dtoName;
     const mappingMethodName = `${lowerFirstLetter(typeName)}To${options.target.name}`;
 
-    mapperWriter.writeObject(propertyName, mappingMethodName, parameterName);
+    mapperWriter.writeObject(propertyName, mappingMethodName, parameterName, isOptional);
     return true;
   }
 

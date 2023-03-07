@@ -14,30 +14,40 @@ export function parsePropertySignature(
 	writer: CodeBlockWriter,
 	parameterName: string,
 	options: Options,
-	property: PropertySignature
+	propertySignature: PropertySignature
 	) {
-	const propertyName = property.getName();
-	const dtoName = getRelativeName(property.getType().getText());
+	const propertyName = propertySignature.getName();
+	const dtoName = getRelativeName(propertySignature.getType().getText());
+
+	const isOptional = propertySignature.hasQuestionToken();
+
+	// TRICK: remove optional token to get the same propertyType data as without question token
+	propertySignature.setHasQuestionToken(false);
+
+	const propertyType = propertySignature.getType()
 
 	const isSimpleType =
-		property.getType().isLiteral() ||
-		property.getType().isBoolean() ||
-		property.getType().isBooleanLiteral() ||
-		property.getType().isNumber() ||
-		property.getType().isNumberLiteral() ||
-		property.getType().isString() ||
-		property.getType().isStringLiteral();
+		propertyType.isLiteral() ||
+		propertyType.isBoolean() ||
+		propertyType.isBooleanLiteral() ||
+		propertyType.isNumber() ||
+		propertyType.isNumberLiteral() ||
+		propertyType.isString() ||
+		propertyType.isStringLiteral();
 
 	const isEnum = dtoName.endsWith(options.source.enumName);
 
-	const isInterface = property.getType().isInterface();
-	const isType = property.getType().isObject();
-	const isArray = property.getType().isArray() || property.getType().isReadonlyArray();
+	const isInterface = propertyType.isInterface();
+	const isType = propertyType.isObject();
+	const isArray = propertyType.isArray() || propertyType.isReadonlyArray();
 
 	const writeMapperOptions = {
 		parameterName,
 		propertyName,
 		dtoName,
+		//
+		isOptional,
+		//
 		isSimpleType,
 		isEnum,
 		isInterface,
@@ -50,33 +60,34 @@ export function parsePropertySignature(
 
 		console.log({
 			propertyName,
-			isAnonymous: property.getType().isAnonymous(),
-			isAny: property.getType().isAny(),
-			isNever: property.getType().isNever(),
-			isArray: property.getType().isArray(),
-			isReadonlyArray: property.getType().isReadonlyArray(),
-			isTemplateLiteral: property.getType().isTemplateLiteral(),
-			isBoolean: property.getType().isBoolean(),
-			isString: property.getType().isString(),
-			isNumber: property.getType().isNumber(),
-			isLiteral: property.getType().isLiteral(),
-			isBooleanLiteral: property.getType().isBooleanLiteral(),
-			isEnumLiteral: property.getType().isEnumLiteral(),
-			isNumberLiteral: property.getType().isNumberLiteral(),
-			isStringLiteral: property.getType().isStringLiteral(),
-			isClass: property.getType().isClass(),
-			isClassOrInterface: property.getType().isClassOrInterface(),
-			isEnum: property.getType().isEnum(),
-			isInterface: property.getType().isInterface(),
-			isObject: property.getType().isObject(),
-			isTypeParameter: property.getType().isTypeParameter(),
-			isTuple: property.getType().isTuple(),
-			isUnion: property.getType().isUnion(),
-			isIntersection: property.getType().isIntersection(),
-			isUnionOrIntersection: property.getType().isUnionOrIntersection(),
-			isUnknown: property.getType().isUnknown(),
-			isNull: property.getType().isNull(),
-			isUndefined: property.getType().isUndefined(),
+			isOptional,
+			isAnonymous: propertyType.isAnonymous(),
+			isAny: propertyType.isAny(),
+			isNever: propertyType.isNever(),
+			isArray: propertyType.isArray(),
+			isReadonlyArray: propertyType.isReadonlyArray(),
+			isTemplateLiteral: propertyType.isTemplateLiteral(),
+			isBoolean: propertyType.isBoolean(),
+			isString: propertyType.isString(),
+			isNumber: propertyType.isNumber(),
+			isLiteral: propertyType.isLiteral(),
+			isBooleanLiteral: propertyType.isBooleanLiteral(),
+			isEnumLiteral: propertyType.isEnumLiteral(),
+			isNumberLiteral: propertyType.isNumberLiteral(),
+			isStringLiteral: propertyType.isStringLiteral(),
+			isClass: propertyType.isClass(),
+			isClassOrInterface: propertyType.isClassOrInterface(),
+			isEnum: propertyType.isEnum(),
+			isInterface: propertyType.isInterface(),
+			isObject: propertyType.isObject(),
+			isTypeParameter: propertyType.isTypeParameter(),
+			isTuple: propertyType.isTuple(),
+			isUnion: propertyType.isUnion(),
+			isIntersection: propertyType.isIntersection(),
+			isUnionOrIntersection: propertyType.isUnionOrIntersection(),
+			isUnknown: propertyType.isUnknown(),
+			isNull: propertyType.isNull(),
+			isUndefined: propertyType.isUndefined(),
 		});
 	}
 }

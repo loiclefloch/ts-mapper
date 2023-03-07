@@ -21,6 +21,8 @@ export interface WriteMapperOptions {
 	parameterName: string;
 	propertyName: string;
 	dtoName: string;
+	//
+	isOptional: boolean;
 	// type
 	isSimpleType: boolean;
 	isEnum: boolean;

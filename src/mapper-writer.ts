@@ -68,11 +68,13 @@ export function buildMapperWriter(writer: CodeBlockWriter) {
 		writeSimpleType: (propertyName: string, parameterName: string) => {
 			writer.writeLine(`${propertyName}: ${parameterName}.${propertyName},`);
 		},
-		writeObject: (propertyName: string, mappingMethodName: string, parameterName: string) => {
-			writer.writeLine(`${propertyName}: ${mappingMethodName}(${parameterName}.${propertyName}),`);
+		writeObject: (propertyName: string, mappingMethodName: string, parameterName: string, isOptional: boolean) => {
+			const optionalStr = isOptional ? `${parameterName}.${propertyName} && ` : ``
+			writer.writeLine(`${propertyName}: ${optionalStr}${mappingMethodName}(${parameterName}.${propertyName}),`);
 		},
-		writeArray: (propertyName: string, mappingMethodName: string, parameterName: string) => {
-			writer.writeLine(`${propertyName}: ${parameterName}.${propertyName}.map(${mappingMethodName}),`);
+		writeArray: (propertyName: string, mappingMethodName: string, parameterName: string, isOptional: boolean) => {
+			const optionalStr = isOptional ? `?` : ''
+			writer.writeLine(`${propertyName}: ${parameterName}.${propertyName}${optionalStr}.map(${mappingMethodName}),`);
 		},
 		writeEnum: (propertyName: string, mappingMethodName: string, parameterName: string) => {
 			writer.writeLine(`${propertyName}: ${mappingMethodName}(${parameterName}.${propertyName}),`);
