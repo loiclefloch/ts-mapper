@@ -3,15 +3,15 @@ import { parsePropertySignature } from "./parse-property-signature";
 import { Options } from "./types";
 import { lowerFirstLetter } from "./util";
 
-export function writeFunction(
+export function writeMapFunction(
   writer: CodeBlockWriter,
 	options: Options,
   dtoName: string,
 	dtoProperties: PropertySignature[]
 ) {
-	const mappingMethodName = `${lowerFirstLetter(dtoName)}To${options.target.name}`;
-	const parameterName = lowerFirstLetter(dtoName);
-	const newPropertyType = dtoName.replace(options.source.name, options.target.name);
+	const mappingMethodName = buildMappingMethodName(dtoName, options)
+	const parameterName = buildParameterName(dtoName)
+	const newPropertyType = buildNewPropertyType(dtoName, options)
 
   writer.write(`export function ${mappingMethodName}(${parameterName}: ${dtoName}): ${newPropertyType}`).block(() => {
     writer.write(`return`).block(() => {
@@ -20,6 +20,41 @@ export function writeFunction(
       );
 		});
   });
+}
+
+export function writeMapEnumFunction(
+  writer: CodeBlockWriter,
+	options: Options,
+  dtoName: string,
+	enumValues: any[]
+) {
+	const mappingMethodName = buildMappingMethodName(dtoName, options)
+	const parameterName = buildParameterName(dtoName)
+	const newPropertyType = buildNewPropertyEnumType(dtoName, options)
+
+	writer.write(`export function ${mappingMethodName}(${parameterName}: ${dtoName}): ${newPropertyType}`).block(() => {
+    // not only handle string enums for the moment
+    writer.write(
+      `return assertEnum<${newPropertyType}>(state, [ ${enumValues.map((value) => `"${value}"`).join(", ")} ]);`
+    );
+  });
+}
+
+function buildMappingMethodName(dtoName: string, options: Options): string {
+	return `${lowerFirstLetter(dtoName)}To${options.target.name}`;
+}
+
+function buildParameterName(dtoName: string): string {
+	return lowerFirstLetter(dtoName);
+}
+
+function buildNewPropertyType(dtoName: string, options: Options): string {
+	return dtoName.replace(options.source.name, options.target.name);
+}
+
+
+function buildNewPropertyEnumType(dtoName: string, options: Options): string {
+	return dtoName.replace(options.source.enumName, options.target.enumName);
 }
 
 export function buildMapperWriter(writer: CodeBlockWriter) {

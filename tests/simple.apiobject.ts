@@ -1,29 +1,33 @@
 type MyApiEnum = 'A' | 'B';
 
-export interface MyInterfaceApiObject {
-	readonly str: string;
-	num: number;
-	strObject: String;
-	numObject: Number;
+// export interface MyInterfaceApiObject {
+// 	readonly str: string;
+// 	num: number;
+// 	strObject: String;
+// 	numObject: Number;
 
-	other: MyOtherInterfaceApiObject;
-	otherType: MyOtherTypeApiObject
-}
+// 	other: MyOtherInterfaceApiObject;
+// 	otherType: MyOtherTypeApiObject
 
-export interface MyOtherInterfaceApiObject {
-	test: string;
-}
+// 	enumValue: MyApiEnum
+// }
 
-export type MyTypeApiObject = {
-	readonly str: string;
-	num: number;
-	strObject: String;
-	numObject: Number;
+// export interface MyOtherInterfaceApiObject {
+// 	test: string;
+// }
 
-	otherInterface: MyOtherInterfaceApiObject;
-	otherType: MyOtherTypeApiObject // isAnonymous / ius
-}
+// export type MyTypeApiObject = {
+// 	readonly str: string;
+// 	num: number;
+// 	strObject: String;
+// 	numObject: Number;
 
-type MyOtherTypeApiObject = {
-	test: string;
-}
+// 	otherInterface: MyOtherInterfaceApiObject;
+// 	otherType: MyOtherTypeApiObject // isAnonymous / ius
+
+// 	enumValue: MyApiEnum
+// }
+
+// type MyOtherTypeApiObject = {
+// 	test: string;
+// }

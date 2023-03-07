@@ -1,13 +1,22 @@
 import { CodeBlockWriter, PropertySignature, TypeAliasDeclaration } from 'ts-morph';
-import { writeFunction } from "./mapper-writer";
+import { writeMapEnumFunction, writeMapFunction } from "./mapper-writer";
 import { Options } from "./types";
 
-function parseEnum() {}
+function parseEnumAsUnion(writer: CodeBlockWriter, options: Options, dtoName: string, node: TypeAliasDeclaration) {
+  const unionTypes = node
+  .getType()
+  .getUnionTypes()
+
+  const enumValues = unionTypes.map(union => union.getLiteralValue());
+
+  writeMapEnumFunction(writer, options, dtoName, enumValues)
+}
 
 function parseDto(writer: CodeBlockWriter, options: Options, dtoName: string, node: TypeAliasDeclaration) {
   const symbol = node
   .getType()
   .getSymbol()
+
   if (!symbol) {
     return;
   }
@@ -17,7 +26,7 @@ function parseDto(writer: CodeBlockWriter, options: Options, dtoName: string, no
     .map((symbol) => symbol.getDeclarations() as PropertySignature[])
     .flat();
   
-  writeFunction(writer, options, dtoName, dtoPropertySignatures)
+  writeMapFunction(writer, options, dtoName, dtoPropertySignatures)
 }
 
 export function parseTypes(writer: CodeBlockWriter, types: TypeAliasDeclaration[], options: Options) {
@@ -25,7 +34,8 @@ export function parseTypes(writer: CodeBlockWriter, types: TypeAliasDeclaration[
     const dtoName = node.getName();
 
     if (dtoName.endsWith(options.source.enumName)) {
-      // is an enum
+      // is an enum (union)
+      parseEnumAsUnion(writer, options, dtoName, node)
     } else if (dtoName.endsWith(options.source.name)) {
       parseDto(writer, options, dtoName, node);
     } else {

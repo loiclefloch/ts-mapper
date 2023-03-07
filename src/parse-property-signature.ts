@@ -1,6 +1,6 @@
 import { CodeBlockWriter, PropertySignature } from "ts-morph";
 import { Options } from "./types";
-import { writeMapper } from "./write-mapper";
+import { writeMapper } from "./write-mapper"; // TODO: circular dependency
 
 function getRelativeName(name: string) {
 	if (name.includes(")")) {
