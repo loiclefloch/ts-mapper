@@ -20,6 +20,7 @@ export function writeMapFunction(
       );
 		});
   });
+	writer.write('\n');
 }
 
 export function writeMapEnumFunction(
@@ -28,20 +29,25 @@ export function writeMapEnumFunction(
   dtoName: string,
 	enumValues: any[]
 ) {
-	const mappingMethodName = buildMappingMethodName(dtoName, options)
+	const mappingMethodName = buildMappingEnumMethodName(dtoName, options)
 	const parameterName = buildParameterName(dtoName)
 	const newPropertyType = buildNewPropertyEnumType(dtoName, options)
 
 	writer.write(`export function ${mappingMethodName}(${parameterName}: ${dtoName}): ${newPropertyType}`).block(() => {
     // not only handle string enums for the moment
     writer.write(
-      `return assertEnum<${newPropertyType}>(state, [ ${enumValues.map((value) => `"${value}"`).join(", ")} ]);`
+      `return assertEnum<${newPropertyType}>(${parameterName}, [ ${enumValues.map((value) => `"${value}"`).join(", ")} ]);`
     );
   });
+	writer.write('\n');
 }
 
 function buildMappingMethodName(dtoName: string, options: Options): string {
 	return `${lowerFirstLetter(dtoName)}To${options.target.name}`;
+}
+
+function buildMappingEnumMethodName(dtoName: string, options: Options): string {
+	return `${lowerFirstLetter(dtoName)}To${options.target.enumName}`;
 }
 
 function buildParameterName(dtoName: string): string {

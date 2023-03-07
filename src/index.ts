@@ -43,22 +43,10 @@ function main() {
     useSingleQuote: true, // default: false
   });
 
-  console.log(writer.toString());
-
-	 if (false) parseInterfaces(writer, sourceFile.getInterfaces(), options);
+	 if (true) parseInterfaces(writer, sourceFile.getInterfaces(), options);
    if (true) parseTypes(writer, sourceFile.getTypeAliases(), options);
 
 	console.log(writer.toString());
 }
-
-// TODO: type - enum
-// function pseConcreteCaseSessionStateStringToApiEnum(state: string): PseConcreteCaseSessionStateApiEnum {
-// 	return assertEnum<PseConcreteCaseSessionStateApiEnum>(state, [
-//     "CREATED",
-//     "RUNNING",
-//     "CLOSED",
-//   ]);
-// }
-
 
 main();
