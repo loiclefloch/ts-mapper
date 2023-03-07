@@ -19,7 +19,7 @@
     "baseUrl": "./",
 		"outDir": "./build",
     "paths": {
-      "~/*": ["./src/*"]
+      "./*": ["./src/*"]
     },
     "skipLibCheck": true
   }

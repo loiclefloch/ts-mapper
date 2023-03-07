@@ -1,4 +1,4 @@
-import type { PseConcreteCaseSituationApiObject } from '~/apiobject/pseconcretecasesituation.apiobject';
+import type { PseConcreteCaseSituationApiObject } from './apiobject/pseconcretecasesituation.apiobject';
 import type { PseCompetenceApiObject } from './psecompetence.apiobject';
 import type { PseConcreteCaseGroupApiObject } from './pseconcretecasegroup.apiobject';
 import type { UserApiObject } from './user.apiobject';

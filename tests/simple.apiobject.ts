@@ -14,14 +14,14 @@ export interface MyOtherInterfaceApiObject {
 	test: string;
 }
 
-export type MyType = {
+export type MyTypeApiObject = {
 	readonly str: string;
 	num: number;
 	strObject: String;
 	numObject: Number;
 
-	other: MyOtherInterfaceApiObject;
-	otherType: MyOtherTypeApiObject
+	otherInterface: MyOtherInterfaceApiObject;
+	otherType: MyOtherTypeApiObject // isAnonymous / ius
 }
 
 type MyOtherTypeApiObject = {
