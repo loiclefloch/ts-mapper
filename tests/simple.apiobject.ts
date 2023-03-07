@@ -17,9 +17,9 @@ export interface MyInterfaceApiObject {
 // 	enumValue: MyApiEnum
 // }
 
-export interface MyOtherInterfaceApiObject {
-	test: string;
-}
+// export interface MyOtherInterfaceApiObject {
+// 	test: string;
+// }
 
 // export type MyTypeApiObject = {
 // 	readonly str: string;

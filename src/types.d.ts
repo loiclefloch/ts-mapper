@@ -24,6 +24,7 @@ export interface WriteMapperOptions {
 	//
 	isOptional: boolean;
 	// type
+	isAny: boolean;
 	isSimpleType: boolean;
 	isEnum: boolean;
 	isInterface: boolean;

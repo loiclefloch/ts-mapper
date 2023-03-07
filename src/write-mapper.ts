@@ -6,14 +6,17 @@ import { lowerFirstLetter } from "./util";
 export function writeMapper(
   writer: CodeBlockWriter,
 	options: Options,
-  { parameterName, propertyName, dtoName, isOptional, isSimpleType, isEnum, isInterface, isType, isArray }: WriteMapperOptions
+  { parameterName, propertyName, dtoName, isOptional, isAny, isSimpleType, isEnum, isInterface, isType, isArray }: WriteMapperOptions
 ) {
   const mapperWriter = buildMapperWriter(writer);
 
   if (isSimpleType) {
     mapperWriter.writeSimpleType(propertyName, parameterName);
     return true;
-  } else if (isInterface) {
+  } else if (isInterface || isAny) { 
+    // Note: isAny is when we do not have data about the field. We consider it to be an import we do not have access to,
+    //  which means it is most likely an interface.
+
     const interfaceName = dtoName;
     const mappingMethodName = `${lowerFirstLetter(interfaceName)}To${options.target.name}`;
 

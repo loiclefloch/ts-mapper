@@ -1,5 +1,5 @@
 import { CodeBlockWriter, PropertySignature } from "ts-morph";
-import { Options } from "./types";
+import { Options, WriteMapperOptions } from "./types";
 import { writeMapper } from "./write-mapper"; // TODO: circular dependency
 
 function getRelativeName(name: string) {
@@ -41,13 +41,16 @@ export function parsePropertySignature(
 	const isType = propertyType.isObject();
 	const isArray = propertyType.isArray() || propertyType.isReadonlyArray();
 
-	const writeMapperOptions = {
+	const isAny  = propertyType.isAny();
+
+	const writeMapperOptions: WriteMapperOptions = {
 		parameterName,
 		propertyName,
 		dtoName,
 		//
 		isOptional,
 		//
+		isAny,
 		isSimpleType,
 		isEnum,
 		isInterface,
