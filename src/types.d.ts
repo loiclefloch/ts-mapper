@@ -1,5 +1,6 @@
 
-export interface Options {
+export interface NamingOptions {
+	isEnum: boolean;
 	source: {
 			name: string;
 			enumName: string;

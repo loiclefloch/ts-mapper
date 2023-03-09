@@ -1,8 +1,9 @@
 import { CodeBlockWriter, PropertySignature, TypeAliasDeclaration } from 'ts-morph';
 import { writeMapEnumFunction, writeMapFunction } from "./mapper-writer";
-import { Options } from "./types";
+import { getNamingOptionsForName } from './options';
+import { NamingOptions } from "./types";
 
-function parseEnumAsUnion(writer: CodeBlockWriter, options: Options, dtoName: string, node: TypeAliasDeclaration) {
+function parseEnumAsUnion(writer: CodeBlockWriter, options: NamingOptions, dtoName: string, node: TypeAliasDeclaration) {
   const unionTypes = node
   .getType()
   .getUnionTypes()
@@ -12,7 +13,7 @@ function parseEnumAsUnion(writer: CodeBlockWriter, options: Options, dtoName: st
   writeMapEnumFunction(writer, options, dtoName, enumValues)
 }
 
-function parseDto(writer: CodeBlockWriter, options: Options, dtoName: string, node: TypeAliasDeclaration) {
+function parseDto(writer: CodeBlockWriter, options: NamingOptions, dtoName: string, node: TypeAliasDeclaration) {
   const symbol = node
   .getType()
   .getSymbol()
@@ -29,18 +30,18 @@ function parseDto(writer: CodeBlockWriter, options: Options, dtoName: string, no
   writeMapFunction(writer, options, dtoName, dtoPropertySignatures)
 }
 
-export function parseTypes(writer: CodeBlockWriter, types: TypeAliasDeclaration[], options: Options) {
+export function parseTypes(writer: CodeBlockWriter, types: TypeAliasDeclaration[]) {
   types.forEach((node) => {
     const dtoName = node.getName();
 
-    if (dtoName.endsWith(options.source.enumName)) {
+    const namingOption = getNamingOptionsForName(dtoName);
+
+    if (namingOption.isEnum) { // TODO: better
       // is an enum (union)
-      parseEnumAsUnion(writer, options, dtoName, node)
-    } else if (dtoName.endsWith(options.source.name)) {
-      parseDto(writer, options, dtoName, node);
+      parseEnumAsUnion(writer, namingOption, dtoName, node)
     } else {
-      throw new Error(`Invalid name ${dtoName}`);
-    }
+      parseDto(writer, namingOption, dtoName, node);
+    }   
   });
 
 }

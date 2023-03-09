@@ -4,7 +4,7 @@ import { parseTypes } from "./parse-types";
 
 // AST Viewer: https://ts-ast-viewer.com/
 
-function main() {
+function run(filepath: string) {
   const project = new Project({
     compilerOptions: {
       tsConfigFilePath: "../tsconfig.json",
@@ -14,24 +14,13 @@ function main() {
     },
   });
 
-  const sourceFiles = project.addSourceFilesAtPaths("./tests/simple.apiobject.ts");
+  const sourceFiles = project.addSourceFilesAtPaths(filepath);
 
   // InterfaceDeclaration || TypeAliasDeclaration.TypeLiteral
 
   // PropertySignature:
   // identifier
   // type -> StringKeyword, NumberKeyword, BooleanKeyword
-
-  const options = {
-    source: {
-      name: "ApiObject",
-      enumName: "ApiEnum",
-    },
-    target: {
-      name: "Dto",
-      enumName: "DtoEnum",
-    },
-  };
 
   const sourceFile = sourceFiles[0];
 
@@ -43,10 +32,16 @@ function main() {
     useSingleQuote: true, // default: false
   });
 
-	 if (true) parseInterfaces(writer, sourceFile.getInterfaces(), options);
-   if (true) parseTypes(writer, sourceFile.getTypeAliases(), options);
+	 parseInterfaces(writer, sourceFile.getInterfaces());
+   parseTypes(writer, sourceFile.getTypeAliases());
 
-	console.log(writer.toString());
+	const code = writer.toString()
+
+  return code
+}
+
+function main() {
+  console.log(run(process.argv[2]));
 }
 
 main();

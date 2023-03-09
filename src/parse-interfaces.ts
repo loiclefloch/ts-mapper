@@ -1,17 +1,15 @@
 import { CodeBlockWriter, InterfaceDeclaration } from "ts-morph";
 import { writeMapFunction } from "./mapper-writer";
-import { Options } from "./types";
+import { getNamingOptionsForName } from "./options";
 
-export function parseInterfaces(writer: CodeBlockWriter, interfaces: InterfaceDeclaration[], options: Options) {
+export function parseInterfaces(writer: CodeBlockWriter, interfaces: InterfaceDeclaration[]) {
   interfaces.forEach((node) => {
     const dtoName = node.getName();
     const dtoPropertySignatures = node.getProperties();
 
-    if (!dtoName.endsWith(options.source.name)) {
-      throw new Error(`Invalid name ${dtoName}`);
-    }
+    const namingOption = getNamingOptionsForName(dtoName);
 
-    writeMapFunction(writer, options, dtoName, dtoPropertySignatures)
+    writeMapFunction(writer, namingOption, dtoName, dtoPropertySignatures)
   });
 
 }

@@ -1,11 +1,11 @@
 import { CodeBlockWriter } from "ts-morph";
 import { buildMapperWriter } from "./mapper-writer";
-import { Options, WriteMapperOptions } from "./types";
+import { NamingOptions, WriteMapperOptions } from "./types";
 import { lowerFirstLetter } from "./util";
 
 export function writeMapper(
   writer: CodeBlockWriter,
-	options: Options,
+	options: NamingOptions,
   { parameterName, propertyName, dtoName, isOptional, isAny, isSimpleType, isEnum, isInterface, isType, isArray }: WriteMapperOptions
 ) {
   const mapperWriter = buildMapperWriter(writer);

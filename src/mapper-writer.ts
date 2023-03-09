@@ -1,16 +1,16 @@
 import { CodeBlockWriter, PropertySignature } from "ts-morph";
 import { parsePropertySignature } from "./parse-property-signature";
-import { Options } from "./types";
+import { NamingOptions } from "./types";
 import { lowerFirstLetter } from "./util";
 
 export function writeMapFunction(
   writer: CodeBlockWriter,
-	options: Options,
+	options: NamingOptions,
   dtoName: string,
 	dtoProperties: PropertySignature[]
 ) {
 	const mappingMethodName = buildMappingMethodName(dtoName, options)
-	const parameterName = buildParameterName(dtoName)
+	const parameterName = buildParameterName(options.source.name)
 	const newPropertyType = buildNewPropertyType(dtoName, options)
 
   writer.write(`export function ${mappingMethodName}(${parameterName}: ${dtoName}): ${newPropertyType}`).block(() => {
@@ -25,12 +25,12 @@ export function writeMapFunction(
 
 export function writeMapEnumFunction(
   writer: CodeBlockWriter,
-	options: Options,
+	options: NamingOptions,
   dtoName: string,
 	enumValues: any[]
 ) {
 	const mappingMethodName = buildMappingEnumMethodName(dtoName, options)
-	const parameterName = buildParameterName(dtoName)
+	const parameterName = 'value'
 	const newPropertyType = buildNewPropertyEnumType(dtoName, options)
 
 	writer.write(`export function ${mappingMethodName}(${parameterName}: ${dtoName}): ${newPropertyType}`).block(() => {
@@ -42,11 +42,11 @@ export function writeMapEnumFunction(
 	writer.write('\n');
 }
 
-function buildMappingMethodName(dtoName: string, options: Options): string {
+function buildMappingMethodName(dtoName: string, options: NamingOptions): string {
 	return `${lowerFirstLetter(dtoName)}To${options.target.name}`;
 }
 
-function buildMappingEnumMethodName(dtoName: string, options: Options): string {
+function buildMappingEnumMethodName(dtoName: string, options: NamingOptions): string {
 	return `${lowerFirstLetter(dtoName)}To${options.target.enumName}`;
 }
 
@@ -54,12 +54,12 @@ function buildParameterName(dtoName: string): string {
 	return lowerFirstLetter(dtoName);
 }
 
-function buildNewPropertyType(dtoName: string, options: Options): string {
+function buildNewPropertyType(dtoName: string, options: NamingOptions): string {
 	return dtoName.replace(options.source.name, options.target.name);
 }
 
 
-function buildNewPropertyEnumType(dtoName: string, options: Options): string {
+function buildNewPropertyEnumType(dtoName: string, options: NamingOptions): string {
 	return dtoName.replace(options.source.enumName, options.target.enumName);
 }
 
